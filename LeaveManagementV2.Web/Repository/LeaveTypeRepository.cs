@@ -10,7 +10,7 @@ namespace LeaveManagementV2.Web.Repository
 
         public LeaveTypeRepository(ApplicationDbContext db)
         {
-            _db = db;
+            _db = db; 
         }
 
         public bool Create(LeaveType entity)
