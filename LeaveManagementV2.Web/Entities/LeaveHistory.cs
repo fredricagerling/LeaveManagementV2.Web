@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace LeaveManagementV2.Web.Data
+namespace LeaveManagementV2.Web.Entities
 {
     public class LeaveHistory
     {

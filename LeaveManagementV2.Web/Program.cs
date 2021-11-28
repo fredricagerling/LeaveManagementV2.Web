@@ -1,4 +1,6 @@
 using LeaveManagementV2.Web.Data;
+using LeaveManagementV2.Web.Interfaces;
+using LeaveManagementV2.Web.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+// Add references for Repository and Interfaces
+builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
+builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
+builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
