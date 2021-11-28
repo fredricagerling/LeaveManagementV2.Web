@@ -1,5 +1,6 @@
 using LeaveManagementV2.Web.Data;
 using LeaveManagementV2.Web.Interfaces;
+using LeaveManagementV2.Web.Mappings;
 using LeaveManagementV2.Web.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,8 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
 builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
+
+builder.Services.AddAutoMapper(typeof(Maps));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
