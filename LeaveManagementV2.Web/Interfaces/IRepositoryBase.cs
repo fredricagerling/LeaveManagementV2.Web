@@ -7,6 +7,6 @@
         bool Create(T entity);
         bool Update(T entity);
         bool Delete(T entity);
-        bool Save(T entity);
+        bool Save();
     }
 }
