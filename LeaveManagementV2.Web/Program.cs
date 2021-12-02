@@ -1,4 +1,5 @@
 using LeaveManagementV2.Web.Data;
+using LeaveManagementV2.Web.Entities;
 using LeaveManagementV2.Web.Interfaces;
 using LeaveManagementV2.Web.Mappings;
 using LeaveManagementV2.Web.Repository;
@@ -20,7 +21,7 @@ builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 
 builder.Services.AddAutoMapper(typeof(Maps));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 

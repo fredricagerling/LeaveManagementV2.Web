@@ -4,16 +4,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementV2.Web.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<Employee>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Employee>? Employees { get; set; }
-        public DbSet<LeaveAllocation>? LeaveAllocations { get; set; }
-        public DbSet<LeaveHistory>? LeaveHistories { get; set; }
-        public DbSet<LeaveType>? LeaveTypes { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
+        public DbSet<LeaveHistory> LeaveHistories { get; set; }
+        public DbSet<LeaveType> LeaveTypes { get; set; }
     }
 }
