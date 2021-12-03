@@ -1,12 +1,10 @@
-﻿@model LeaveManagementV2.Web.Entities.LeaveType
+﻿@model LeaveTypeViewModel
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
-
-<h4>LeaveType</h4>
+<h1>Edit Leave Type</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -24,17 +22,7 @@
                 <span asp-validation-for="DefaultDays" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="DateCreated" class="control-label"></label>
-                <input asp-for="DateCreated" class="form-control" />
-                <span asp-validation-for="DateCreated" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DateModified" class="control-label"></label>
-                <input asp-for="DateModified" class="form-control" />
-                <span asp-validation-for="DateModified" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Save" class="btn btn-warning" />
             </div>
         </form>
     </div>

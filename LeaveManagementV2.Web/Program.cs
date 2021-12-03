@@ -19,7 +19,7 @@ builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
 builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
 builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 
-builder.Services.AddAutoMapper(typeof(Maps));
+builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Services.AddDefaultIdentity<Employee>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();

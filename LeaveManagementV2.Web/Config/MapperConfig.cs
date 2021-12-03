@@ -4,9 +4,9 @@ using LeaveManagementV2.Web.Models;
 
 namespace LeaveManagementV2.Web.Mappings
 {
-    public class Maps : Profile
+    public class MapperConfig : Profile
     {
-        public Maps()
+        public MapperConfig()
         {
             CreateMap<LeaveType, LeaveTypeViewModel>().ReverseMap();
             CreateMap<LeaveHistory, LeaveHistoryViewModel>().ReverseMap();
