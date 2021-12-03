@@ -2,11 +2,11 @@
 {
     public interface IRepositoryBase<T> where T: class
     {
-        ICollection<T> FindAll();
-        T FindById(int id);
-        bool Create(T entity);
-        bool Update(T entity);
-        bool Delete(T entity);
-        bool Save();
+        Task<T?> GetAsync(int? id);
+        Task<List<T>> GetAllAsync();
+        Task DeleteAsync(int id);
+        Task UpdateAsync(T entity);
+        Task<T> AddAsync(T entity);
+        Task<bool> Exists(int id);
     }
 }

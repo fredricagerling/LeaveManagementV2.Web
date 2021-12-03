@@ -2,7 +2,7 @@ using LeaveManagementV2.Web.Data;
 using LeaveManagementV2.Web.Entities;
 using LeaveManagementV2.Web.Interfaces;
 using LeaveManagementV2.Web.Mappings;
-using LeaveManagementV2.Web.Repository;
+using LeaveManagementV2.Web.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +15,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 // Add references for Repository and Interfaces
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 builder.Services.AddScoped<ILeaveTypeRepository, LeaveTypeRepository>();
-builder.Services.AddScoped<ILeaveAllocationRepository, LeaveAllocationRepository>();
-builder.Services.AddScoped<ILeaveHistoryRepository, LeaveHistoryRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
