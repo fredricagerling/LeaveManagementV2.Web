@@ -32,6 +32,7 @@
                     @Html.DisplayFor(modelItem => item.DefaultDays)
                 </td>
                 <td>
+                    <button data-id="@item.Id" class="btn btn-primary allocateBtn" asp-route-id="@item.Id" type="button"><i class="far fa-trash-alt"></i> Allocate Leave</button>
                     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i> Edit</a>
                     <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id"><i class="fas fa-info-circle"></i> Details</a>
                     <button data-id="@item.Id" class="btn btn-danger deleteBtn" asp-route-id="@item.Id" type="button"><i class="far fa-trash-alt"></i> Delete</button>
@@ -43,6 +44,10 @@
 
 <form id="deleteForm" asp-action="Delete">
     <input type="hidden" id="leaveTypeId" name="Id" />
+</form>
+
+<form id="allocationForm" asp-action="AllocateLeave">
+    <input type="hidden" id="allocateId" name="Id" />
 </form>
 
 @section Scripts{
@@ -63,6 +68,23 @@
                     var id = button.data("id");
                     $('#leaveTypeId').val(id);
                     $('#deleteForm').submit();
+                }
+            });
+        });
+
+        $('.allocateBtn').click(function(e){
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to allocate this leave to all Employees?",
+                buttons: true,
+                icon: "warning",
+                dangerMode: true
+            }).then((confirm) => {
+                if(confirm){
+                    var button = $(this);
+                    var id = button.data("id");
+                    $('#allocateId').val(id);
+                    $('#allocationForm').submit();
                 }
             });
         });

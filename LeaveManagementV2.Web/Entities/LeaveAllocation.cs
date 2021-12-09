@@ -19,5 +19,7 @@ namespace LeaveManagementV2.Web.Entities
         
         public DateTime DateModified { get; set; }
         public DateTime DateCreated { get; set; }
+
+        public int Period { get; set; }
     }
 }
