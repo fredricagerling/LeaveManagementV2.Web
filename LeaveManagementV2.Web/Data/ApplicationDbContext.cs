@@ -11,6 +11,14 @@ namespace LeaveManagementV2.Web.Data
         {
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new RoleSeedConfig());
+            builder.ApplyConfiguration(new UserSeedConfig());
+            builder.ApplyConfiguration(new UserRoleSeedConfig());
+        }
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<LeaveAllocation> LeaveAllocations { get; set; }
         public DbSet<LeaveHistory> LeaveHistories { get; set; }
