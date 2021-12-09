@@ -12,6 +12,7 @@ namespace LeaveManagementV2.Web.Mappings
             CreateMap<LeaveHistory, LeaveHistoryViewModel>().ReverseMap();
             CreateMap<LeaveAllocation, LeaveAllocationViewModel>().ReverseMap();
             CreateMap<Employee, EmployeeViewModel>().ReverseMap();
+            CreateMap<Employee, EmployeeListViewModel>().ReverseMap();
         }
     }
 }
