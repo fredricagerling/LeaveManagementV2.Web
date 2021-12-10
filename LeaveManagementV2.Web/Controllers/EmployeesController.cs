@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LeaveManagementV2.Web.Constants;
 using LeaveManagementV2.Web.Entities;
+using LeaveManagementV2.Web.Interfaces;
 using LeaveManagementV2.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +13,13 @@ namespace LeaveManagementV2.Web.Controllers
     {
         private readonly UserManager<Employee> _userManager;
         private readonly IMapper _mapper;
+        private readonly ILeaveAllocationRepository _repo;
 
-        public EmployeesController(UserManager<Employee> userManager, IMapper mapper)
+        public EmployeesController(UserManager<Employee> userManager, IMapper mapper, ILeaveAllocationRepository repo)
         {
             _userManager = userManager;
             _mapper = mapper;
+            _repo = repo;
         }
 
         // GET: EmployeesController
@@ -27,10 +30,11 @@ namespace LeaveManagementV2.Web.Controllers
             return View(model);
         }
 
-        // GET: EmployeesController/ViewAllocations/5
-        public IActionResult ViewAllocations(int id)
+        // GET: EmployeesController/ViewAllocations/employeeId
+        public async Task<IActionResult> ViewAllocations(string id)
         {
-            return View();
+            var model = await _repo.GetEmployeeAllocations(id);
+            return View(model);
         }
 
         // GET: EmployeesController/Create

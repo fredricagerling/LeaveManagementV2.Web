@@ -1,4 +1,5 @@
 ﻿using LeaveManagementV2.Web.Entities;
+using LeaveManagementV2.Web.Models;
 
 namespace LeaveManagementV2.Web.Interfaces
 {
@@ -6,5 +7,7 @@ namespace LeaveManagementV2.Web.Interfaces
     {
         Task LeaveAllocation(int leaveTypeId);
         Task<bool> AllocationExists(string employeeId, int leaveTypeId, int period);
+
+        Task<EmployeeAllocationViewModel> GetEmployeeAllocations(string employeeId);
     }
 }
