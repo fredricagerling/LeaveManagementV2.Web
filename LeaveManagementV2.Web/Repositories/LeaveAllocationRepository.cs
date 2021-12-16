@@ -38,10 +38,30 @@ namespace LeaveManagementV2.Web.Repositories
 
             var employee = await _userManager.FindByIdAsync(employeeId);
 
-            var employeeAllocationModel = _mapper.Map<EmployeeAllocationViewModel>(employee);
-            employeeAllocationModel.LeaveAllocations = _mapper.Map<List<LeaveAllocationViewModel>>(allocations);
+            var model = _mapper.Map<EmployeeAllocationViewModel>(employee);
+            model.LeaveAllocations = _mapper.Map<List<LeaveAllocationViewModel>>(allocations);
 
-            return employeeAllocationModel;
+            return model;
+
+        }
+
+        public async Task<LeaveAllocationEditViewModel> GetEmployeeAllocation(int id)
+        {
+            var allocation = await _context.LeaveAllocations
+                .Include(x => x.LeaveType)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(allocation == null)
+            {
+                return null;
+            }
+
+            var employee = await _userManager.FindByIdAsync(allocation.EmployeeId);
+
+            var model = _mapper.Map<LeaveAllocationEditViewModel>(allocation);
+            model.Employee = _mapper.Map<EmployeeListViewModel>(employee);
+
+            return model;
 
         }
 
@@ -71,6 +91,22 @@ namespace LeaveManagementV2.Web.Repositories
             }
 
             await AddRangeAsync(allocations);
+        }
+
+        public async Task<bool> UpdateEmployeeAllocation(LeaveAllocationEditViewModel model)
+        {
+            var leaveAllocation = await GetAsync(model.Id);
+
+            if (leaveAllocation == null)
+            {
+                return false;
+            }
+
+            leaveAllocation.Period = model.Period;
+            leaveAllocation.NumberOfDays = model.NumberOfDays;
+            await UpdateAsync(leaveAllocation);
+
+            return true;
         }
     }
 }

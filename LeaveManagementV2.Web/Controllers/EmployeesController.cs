@@ -6,6 +6,7 @@ using LeaveManagementV2.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace LeaveManagementV2.Web.Controllers
 {
@@ -37,46 +38,47 @@ namespace LeaveManagementV2.Web.Controllers
             return View(model);
         }
 
-        // GET: EmployeesController/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: EmployeesController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
         // GET: EmployeesController/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> EditAllocation(int id)
         {
-            return View();
+            var model = await _repo.GetEmployeeAllocation(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
         }
 
         // POST: EmployeesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> EditAllocation(int id, LeaveAllocationEditViewModel model)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    bool didUpdate = await _repo.UpdateEmployeeAllocation(model);
+
+                    if (!didUpdate)
+                    {
+                        throw new Exception();
+                    }
+
+                    return RedirectToAction(nameof(ViewAllocations), new { id = model.EmployeeId });
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ModelState.AddModelError(string.Empty, "An error has occurred");
             }
+
+            model.Employee = _mapper.Map<EmployeeListViewModel>(_userManager.FindByIdAsync(model.EmployeeId));
+            model.LeaveType = _mapper.Map<LeaveTypeViewModel>(await _repo.GetAsync(model.LeaveTypeId));
+
+            return View(model);
         }
 
         // GET: EmployeesController/Delete/5
