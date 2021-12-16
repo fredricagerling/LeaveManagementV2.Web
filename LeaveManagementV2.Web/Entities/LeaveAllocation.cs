@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LeaveManagementV2.Web.Entities
 {
-    public class LeaveAllocation
+    public class LeaveAllocation : BaseEntity
     {
-        [Key]
-        public int Id { get; set; }
+        
         public int NumberOfDays { get; set; }
 
         [ForeignKey("LeaveTypeId")]
@@ -17,9 +16,6 @@ namespace LeaveManagementV2.Web.Entities
         public Employee Employee { get; set; }
         public string EmployeeId { get; set; }
         
-        public DateTime DateModified { get; set; }
-        public DateTime DateCreated { get; set; }
-
         public int Period { get; set; }
     }
 }
