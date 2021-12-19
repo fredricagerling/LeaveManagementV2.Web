@@ -30,6 +30,11 @@ namespace LeaveManagementV2.Web.Repositories
             _userManager = userManager;
         }
 
+        public Task ChangeApprovalStatus(int leaveRequestId, bool approved)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task CreateLeaveRequest(LeaveRequestCreateViewModel model)
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
@@ -39,6 +44,27 @@ namespace LeaveManagementV2.Web.Repositories
             leaveRequest.RequestingEmployeeId = user.Id;
 
             await AddAsync(leaveRequest);
+        }
+
+        public async Task<AdminLeaveRequestViewModel> GetAdminLeaveRequestList()
+        {
+            var leaveRequests = await _context.LeaveRequests.Include(x => x.LeaveType).ToListAsync();
+
+            var model =  new AdminLeaveRequestViewModel
+            {
+                TotalRequests = leaveRequests.Count(),
+                ApprovedRequests = leaveRequests.Count(x => x.Approved == true),
+                PendingRequests = leaveRequests.Count(x => x.Approved == null),
+                RejectedRequests = leaveRequests.Count(x => x.Approved == false),
+                LeaveRequests = _mapper.Map<List<LeaveRequestViewModel>>(leaveRequests),
+            };
+
+            foreach (var request in model.LeaveRequests)
+            {
+                request.Employee = _mapper.Map<EmployeeListViewModel>(await _userManager.FindByIdAsync(request.RequestingEmployeeId));
+            }
+
+            return model;
         }
 
         public async Task<List<LeaveRequest>> GetAllAsync(string employeeId)
@@ -52,13 +78,11 @@ namespace LeaveManagementV2.Web.Repositories
             var allocations = (await _leaveAllocationRepo.GetEmployeeAllocations(user.Id)).LeaveAllocations;
             var requests = _mapper.Map<List<LeaveRequestViewModel>>(await GetAllAsync(user.Id));
 
-            var model = new EmployeeLeaveRequestViewModel
+            return new EmployeeLeaveRequestViewModel
             {
                 LeaveAllocations = allocations,
                 LeaveRequests = requests
             };
-
-            return model;
         }
     }
 }

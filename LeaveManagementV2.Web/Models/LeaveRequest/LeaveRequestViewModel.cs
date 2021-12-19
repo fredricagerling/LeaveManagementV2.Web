@@ -6,6 +6,7 @@ namespace LeaveManagementV2.Web.Models
     public class LeaveRequestViewModel : LeaveRequestCreateViewModel
     {
         public int Id { get; set; }
+
         [ForeignKey("LeaveTypeId")]
         [Display(Name = "Leave Type")]
         public LeaveTypeViewModel LeaveType { get; set; }
@@ -14,5 +15,8 @@ namespace LeaveManagementV2.Web.Models
         public DateTime DateRequested { get; set; }
         public bool? Approved { get; set; }
         public bool Cancelled { get; set; }
+
+        public string? RequestingEmployeeId { get; set; }
+        public EmployeeListViewModel Employee { get; set; }
     }
 }

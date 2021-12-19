@@ -1,89 +1,124 @@
-﻿@model IEnumerable<LeaveManagementV2.Web.Entities.LeaveRequest>
+﻿@model AdminLeaveRequestViewModel
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Admin</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="row">
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-text">@Model.TotalRequests</h2>
+                <h6 class="card-title">Total</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-text text-warning">@Model.PendingRequests</h2>
+                <h6 class="card-title">Pending</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-text text-success">@Model.ApprovedRequests</h2>
+                <h6 class="card-title">Approved</h6>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <h2 class="card-text text-danger">@Model.RejectedRequests</h2>
+                <h6 class="card-title">Rejected</h6>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr />
+<h2>Leave Request Log</h2>
+<br />
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RequestingEmployeeId)
+                Employee Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LeaveType)
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].LeaveType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.RequestComment)
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].StartDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].EndDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                @Html.DisplayNameFor(model => model.LeaveRequests[0].DateRequested)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateRequested)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Approved)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cancelled)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateModified)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateCreated)
+                Status
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestingEmployeeId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LeaveType.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RequestComment)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateRequested)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Approved)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancelled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateModified)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateCreated)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.LeaveRequests)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.FirstName)
+                    @Html.DisplayFor(modelItem => item.Employee.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LeaveType.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateRequested)
+                </td>
+                <td>
+                    @if (item.Cancelled)
+                    {
+                        <span class="badge bg-secondary">Cancelled</span>
+                    }
+
+                    @if (!item.Cancelled)
+                    {
+                        @switch (item.Approved)
+                        {
+                            case true:
+                                <span class="badge bg-success">Approved</span>
+                                break;
+                            case false:
+                                <span class="badge bg-secondary">Rejected</span>
+                                break;
+                            default:
+                                <span class="badge bg-warning">Pending</span>
+                                break;
+                        }
+                    }
+                </td>
+                <td>
+                    @if (!item.Cancelled)
+                    {
+                        <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Review</a>
+
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

@@ -7,7 +7,6 @@ namespace LeaveManagementV2.Web.Interfaces
     {
         Task LeaveAllocation(int leaveTypeId);
         Task<bool> AllocationExists(string employeeId, int leaveTypeId, int period);
-
         Task<EmployeeAllocationViewModel> GetEmployeeAllocations(string employeeId);
         Task<LeaveAllocationEditViewModel> GetEmployeeAllocation(int id);
         Task<bool> UpdateEmployeeAllocation(LeaveAllocationEditViewModel model);
