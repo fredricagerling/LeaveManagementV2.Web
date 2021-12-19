@@ -33,6 +33,12 @@ namespace LeaveManagementV2.Web.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> MyLeave()
+        {
+            var model = await _leaveRequestRepo.GetLeaveRequestDetails();
+            return View(model);
+        }
+
         // GET: LeaveRequests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
