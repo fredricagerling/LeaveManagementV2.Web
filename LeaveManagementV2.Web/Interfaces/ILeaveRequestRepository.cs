@@ -5,10 +5,11 @@ namespace LeaveManagementV2.Web.Interfaces
 {
     public interface ILeaveRequestRepository : IRepositoryBase<LeaveRequest>
     {
-        Task CreateLeaveRequest(LeaveRequestCreateViewModel model);
-        Task<EmployeeLeaveRequestViewModel> GetLeaveRequestDetails();
+        Task CreateLeaveRequestAsync(LeaveRequestCreateViewModel model);
+        Task<EmployeeLeaveRequestViewModel> GetLeaveRequestDetailsAsync();
+        Task<LeaveRequestViewModel> GetLeaveRequestAsync(int? id);
         Task<List<LeaveRequest>> GetAllAsync(string employeeId);
-        Task ChangeApprovalStatus(int leaveRequestId, bool approved);
-        Task<AdminLeaveRequestViewModel> GetAdminLeaveRequestList();
+        Task ChangeApprovalStatusAsync(int leaveRequestId, bool approved);
+        Task<AdminLeaveRequestViewModel> GetAdminLeaveRequestListAsync();
     }
 }

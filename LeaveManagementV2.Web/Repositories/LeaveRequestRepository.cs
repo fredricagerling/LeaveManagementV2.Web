@@ -30,12 +30,24 @@ namespace LeaveManagementV2.Web.Repositories
             _userManager = userManager;
         }
 
-        public Task ChangeApprovalStatus(int leaveRequestId, bool approved)
+        public async Task ChangeApprovalStatusAsync(int leaveRequestId, bool approved)
         {
-            throw new NotImplementedException();
+            var leaveRequest = await GetAsync(leaveRequestId);
+            leaveRequest.Approved = approved;
+
+            if (approved)
+            {
+                var allocation = await _leaveAllocationRepo.GetEmployeeAllocation(leaveRequest.RequestingEmployeeId, leaveRequest.LeaveTypeId);
+                int daysRequested = (int)(leaveRequest.EndDate - leaveRequest.StartDate).TotalDays;
+                allocation.NumberOfDays -= daysRequested;
+
+                await _leaveAllocationRepo.UpdateAsync(allocation);
+            }
+
+            await UpdateAsync(leaveRequest);
         }
 
-        public async Task CreateLeaveRequest(LeaveRequestCreateViewModel model)
+        public async Task CreateLeaveRequestAsync(LeaveRequestCreateViewModel model)
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
             var leaveRequest = _mapper.Map<LeaveRequest>(model);
@@ -46,7 +58,7 @@ namespace LeaveManagementV2.Web.Repositories
             await AddAsync(leaveRequest);
         }
 
-        public async Task<AdminLeaveRequestViewModel> GetAdminLeaveRequestList()
+        public async Task<AdminLeaveRequestViewModel> GetAdminLeaveRequestListAsync()
         {
             var leaveRequests = await _context.LeaveRequests.Include(x => x.LeaveType).ToListAsync();
 
@@ -72,7 +84,21 @@ namespace LeaveManagementV2.Web.Repositories
             return await _context.LeaveRequests.Where(x => x.RequestingEmployeeId == employeeId).Include(l => l.LeaveType).ToListAsync();
         }
 
-        public async Task<EmployeeLeaveRequestViewModel> GetLeaveRequestDetails()
+        public async Task<LeaveRequestViewModel> GetLeaveRequestAsync(int? id)
+        {
+            var leaveRequest = await _context.LeaveRequests.Include(x => x.LeaveType).FirstOrDefaultAsync(x => x.Id == id);
+            if(leaveRequest == null)
+            {
+                return null;
+            }
+
+            var model = _mapper.Map<LeaveRequestViewModel>(leaveRequest);
+            model.Employee = _mapper.Map<EmployeeListViewModel>(await _userManager.FindByIdAsync(leaveRequest?.RequestingEmployeeId));
+            return model;
+
+        }
+
+        public async Task<EmployeeLeaveRequestViewModel> GetLeaveRequestDetailsAsync()
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
             var allocations = (await _leaveAllocationRepo.GetEmployeeAllocations(user.Id)).LeaveAllocations;

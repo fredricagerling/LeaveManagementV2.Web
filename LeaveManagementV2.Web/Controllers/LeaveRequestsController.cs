@@ -31,33 +31,46 @@ namespace LeaveManagementV2.Web.Controllers
         // GET: LeaveRequests
         public async Task<IActionResult> Index()
         {
-            var model = await _leaveRequestRepo.GetAdminLeaveRequestList();
+            var model = await _leaveRequestRepo.GetAdminLeaveRequestListAsync();
             return View(model);
         }
 
         public async Task<IActionResult> MyLeave()
         {
-            var model = await _leaveRequestRepo.GetLeaveRequestDetails();
+            var model = await _leaveRequestRepo.GetLeaveRequestDetailsAsync();
             return View(model);
         }
 
         // GET: LeaveRequests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
+            var model = await _leaveRequestRepo.GetLeaveRequestAsync(id);
+
+            if (model == null)
             {
                 return NotFound();
             }
 
-            var leaveRequest = await _context.LeaveRequests
-                .Include(l => l.LeaveType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (leaveRequest == null)
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApproveRequest(int id, bool approved)
+        {
+
+            try
             {
+
+            await _leaveRequestRepo.ChangeApprovalStatusAsync(id, approved);
+            }
+            catch (Exception ex)
+            {
+
                 return NotFound();
             }
+            return RedirectToAction(nameof(Index));
 
-            return View(leaveRequest);
         }
 
         // GET: LeaveRequests/Create
@@ -82,8 +95,8 @@ namespace LeaveManagementV2.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    await _leaveRequestRepo.CreateLeaveRequest(model);
-                    return RedirectToAction(nameof(Index));
+                    await _leaveRequestRepo.CreateLeaveRequestAsync(model);
+                    return RedirectToAction(nameof(MyLeave));
                 }
             }
             catch (Exception ex)
