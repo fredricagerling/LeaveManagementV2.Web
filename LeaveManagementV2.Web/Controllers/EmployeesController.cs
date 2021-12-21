@@ -1,13 +1,11 @@
 ﻿using AutoMapper;
-using LeaveManagementV2.Web.Constants;
-using LeaveManagementV2.Web.Entities;
+using LeaveManagement.Common.Constants;
+using LeaveManagement.Data;
 using LeaveManagementV2.Web.Interfaces;
 using LeaveManagementV2.Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace LeaveManagementV2.Web.Controllers
 {

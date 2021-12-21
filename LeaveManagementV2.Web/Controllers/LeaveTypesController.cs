@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LeaveManagementV2.Web.Data;
-using LeaveManagementV2.Web.Entities;
-using AutoMapper;
-using LeaveManagementV2.Web.Models;
+﻿using AutoMapper;
+using LeaveManagement.Common.Constants;
+using LeaveManagement.Data;
 using LeaveManagementV2.Web.Interfaces;
+using LeaveManagementV2.Web.Models;
 using Microsoft.AspNetCore.Authorization;
-using LeaveManagementV2.Web.Constants;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaveManagementV2.Web.Controllers
 {
@@ -24,8 +18,8 @@ namespace LeaveManagementV2.Web.Controllers
         private readonly ILeaveAllocationRepository _leaveAllocationRepository;
 
         public LeaveTypesController(
-            ILeaveTypeRepository repo, 
-            IMapper mapper, 
+            ILeaveTypeRepository repo,
+            IMapper mapper,
             ILeaveAllocationRepository leaveAllocationRepository
             )
         {
@@ -107,6 +101,7 @@ namespace LeaveManagementV2.Web.Controllers
             if (ModelState.IsValid)
             {
                 var leaveType = _mapper.Map<LeaveType>(leaveTypeViewModel);
+
                 try
                 {
                     await _repo.UpdateAsync(leaveType);

@@ -8,7 +8,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Create">
+        <form asp-action="Create" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <br />
             <div class="form-group">
@@ -22,7 +22,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="StartDate" class="control-label"></label>
-                        <input asp-for="StartDate" class="form-control datepicker" type="text" />
+                        <input asp-for="StartDate" class="form-control datepicker" type="datetime" />
                         <span asp-validation-for="StartDate" class="text-danger"></span>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                 <div class="col-md-6">
                     <div class="form-group">
                         <label asp-for="EndDate" class="control-label"></label>
-                        <input asp-for="EndDate" class="form-control datepicker" type="text" />
+                        <input asp-for="EndDate" class="form-control datepicker" type="datetime" />
                         <span asp-validation-for="EndDate" class="text-danger"></span>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
             <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary btn-block" />
-                <a asp-action="Index" class="btn btn-secondary">Back</a>
+                <a asp-action="MyLeave" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>

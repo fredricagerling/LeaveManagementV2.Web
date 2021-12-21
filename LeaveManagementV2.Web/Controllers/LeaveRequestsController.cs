@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LeaveManagement.Common.Constants;
+using LeaveManagement.Data;
+using LeaveManagementV2.Web.Interfaces;
+using LeaveManagementV2.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using LeaveManagementV2.Web.Data;
-using LeaveManagementV2.Web.Entities;
-using LeaveManagementV2.Web.Models;
-using AutoMapper;
-using LeaveManagementV2.Web.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using LeaveManagementV2.Web.Constants;
 
 namespace LeaveManagementV2.Web.Controllers
 {
@@ -20,11 +13,13 @@ namespace LeaveManagementV2.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILeaveRequestRepository _leaveRequestRepo;
+        private readonly ILogger _logger;
 
-        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestRepository leaveRequestRepo)
+        public LeaveRequestsController(ApplicationDbContext context, ILeaveRequestRepository leaveRequestRepo, ILogger logger)
         {
             _context = context;
             _leaveRequestRepo = leaveRequestRepo;
+            _logger = logger;
         }
 
         [Authorize(Roles = Roles.Administrator)]
@@ -62,7 +57,7 @@ namespace LeaveManagementV2.Web.Controllers
             try
             {
 
-            await _leaveRequestRepo.ChangeApprovalStatusAsync(id, approved);
+                await _leaveRequestRepo.ChangeApprovalStatusAsync(id, approved);
             }
             catch (Exception ex)
             {
@@ -101,6 +96,8 @@ namespace LeaveManagementV2.Web.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error Creating Leave Request");
+
                 ModelState.AddModelError(string.Empty, "An error has occurred");
             }
 
@@ -108,87 +105,20 @@ namespace LeaveManagementV2.Web.Controllers
             return View(model);
         }
 
-        // GET: LeaveRequests/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var leaveRequest = await _context.LeaveRequests.FindAsync(id);
-            if (leaveRequest == null)
-            {
-                return NotFound();
-            }
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Name", leaveRequest.LeaveTypeId);
-            return View(leaveRequest);
-        }
-
-        // POST: LeaveRequests/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RequestingEmployeeId,LeaveTypeId,RequestComment,StartDate,EndDate,DateRequested,Approved,Cancelled,Id,DateModified,DateCreated")] LeaveRequest leaveRequest)
+        public async Task<IActionResult> Cancel(int id)
         {
-            if (id != leaveRequest.Id)
+            try
             {
-                return NotFound();
-            }
+                await _leaveRequestRepo.CancelLeaveRequest(id);
 
-            if (ModelState.IsValid)
+            }
+            catch (Exception ex)
             {
-                try
-                {
-                    _context.Update(leaveRequest);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!LeaveRequestExists(leaveRequest.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                throw;
             }
-            ViewData["LeaveTypeId"] = new SelectList(_context.LeaveTypes, "Id", "Name", leaveRequest.LeaveTypeId);
-            return View(leaveRequest);
-        }
-
-        // GET: LeaveRequests/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var leaveRequest = await _context.LeaveRequests
-                .Include(l => l.LeaveType)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (leaveRequest == null)
-            {
-                return NotFound();
-            }
-
-            return View(leaveRequest);
-        }
-
-        // POST: LeaveRequests/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var leaveRequest = await _context.LeaveRequests.FindAsync(id);
-            _context.LeaveRequests.Remove(leaveRequest);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyLeave));
         }
 
         private bool LeaveRequestExists(int id)
